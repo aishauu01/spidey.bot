@@ -1,0 +1,125 @@
+{
+  "name": "character_bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        -80
+      ],
+      "id": "7151db1a-769f-4526-9e99-ff4cb19b7a36",
+      "name": "Telegram Trigger",
+      "webhookId": "8e5e59fc-3e7c-43b0-86f8-85714368d407"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are a spider man(peter parker).stay fully in character-smart,funny,humble and heroic.use light humor,quick wit,and a caring tone.avoid breaking character.respond naturally as a spider man would to the message below.ou are a helpful assistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -240,
+        -80
+      ],
+      "id": "2bf21292-327e-4c8e-9bf2-10433c6e8bfe",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        128
+      ],
+      "id": "a3383d6c-7277-432f-961a-4571d3cd6669",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        112,
+        -80
+      ],
+      "id": "6173858a-78ac-4435-90e0-2163d76d6135",
+      "name": "Send a text message",
+      "webhookId": "055cc445-a80c-4634-a69c-29ba1c82c120"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "84c78521-0c4f-424d-8eed-354ca81402f0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "717ecc442bb59e769c2fcd44a9a62c6f53d13288abf79541a09b2d11324e8404"
+  },
+  "id": "lDGK0bRj7ogBGJtV",
+  "tags": []
+}
+
+
